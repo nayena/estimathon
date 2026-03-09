@@ -752,20 +752,9 @@ input[type=number] { -moz-appearance: textfield; }
 <!-- ════════════ SETUP SCREEN ════════════ -->
 <div class="setup-screen" id="setupScreen">
   <h2>ESTIMATHON</h2>
-  <p class="setup-sub">Connect to Firebase for real-time sync</p>
+  <p class="setup-sub">Real-time Scoring Dashboard</p>
 
   <div class="setup-card">
-    <label>Firebase Config JSON</label>
-    <textarea id="setupConfig" placeholder='{
-  "apiKey": "...",
-  "authDomain": "...",
-  "databaseURL": "...",
-  "projectId": "...",
-  "storageBucket": "...",
-  "messagingSenderId": "...",
-  "appId": "..."
-}'></textarea>
-
     <label>Room Name</label>
     <input type="text" id="setupRoom" placeholder="e.g. estimathon-2026" value="">
 
@@ -776,13 +765,6 @@ input[type=number] { -moz-appearance: textfield; }
       <button class="btn" style="flex:1" onclick="connectFirebase('player')">Join as Player</button>
     </div>
   </div>
-
-  <p class="setup-hint">
-    Create a free Firebase project at
-    <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a><br>
-    Enable <strong>Realtime Database</strong> and set rules to <code>".read": true, ".write": true</code><br>
-    Copy the config object from Project Settings → General → Your apps → Firebase SDK snippet
-  </p>
 </div>
 
 <!-- ════════════ MAIN APP ════════════ -->
@@ -886,12 +868,22 @@ for (let t = 0; t < NUM_TEAMS; t++) {
   });
 }
 
+// ─── FIREBASE CONFIG (hardcoded) ───
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyD7ORtwxmxdzgZjnBE-Nlap-0DLdi0vEAk",
+  authDomain: "estimathon-39e2d.firebaseapp.com",
+  databaseURL: "https://estimathon-39e2d-default-rtdb.firebaseio.com",
+  projectId: "estimathon-39e2d",
+  storageBucket: "estimathon-39e2d.firebasestorage.app",
+  messagingSenderId: "919380022049",
+  appId: "1:919380022049:web:73c9f5ba533cd680db2460",
+  measurementId: "G-SJBBZC7ML2"
+};
+
 // ─── SETUP & FIREBASE CONNECTION ───
 
-// Restore saved config
+// Restore saved room
 try {
-  const saved = localStorage.getItem('estimathon_config');
-  if (saved) document.getElementById('setupConfig').value = saved;
   const savedRoom = localStorage.getItem('estimathon_room');
   if (savedRoom) document.getElementById('setupRoom').value = savedRoom;
 } catch(e) {}
@@ -900,26 +892,9 @@ function connectFirebase(mode) {
   const errEl = document.getElementById('setupError');
   errEl.style.display = 'none';
 
-  const configStr = document.getElementById('setupConfig').value.trim();
   const room = document.getElementById('setupRoom').value.trim() || 'default';
 
-  let config;
-  try {
-    config = JSON.parse(configStr);
-  } catch(e) {
-    errEl.textContent = 'Invalid JSON. Paste the Firebase config object.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  if (!config.databaseURL) {
-    errEl.textContent = 'Config is missing "databaseURL". Check your Firebase config.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  // Save for next time
-  localStorage.setItem('estimathon_config', configStr);
+  // Save room for next time
   localStorage.setItem('estimathon_room', room);
 
   MODE = mode;
@@ -927,7 +902,7 @@ function connectFirebase(mode) {
   // Initialize Firebase
   try {
     if (!firebase.apps.length) {
-      firebase.initializeApp(config);
+      firebase.initializeApp(FIREBASE_CONFIG);
     }
     db = firebase.database();
     roomRef = db.ref('rooms/' + room);
@@ -1447,29 +1422,17 @@ function escapeHTML(str) {
 }
 
 // ─── URL PARAM AUTO-CONNECT ───
-// If URL has ?config=base64&room=name&mode=admin|player, auto-connect
+// If URL has ?room=name&mode=admin|player, auto-connect
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const configB64 = params.get('config');
   const room = params.get('room');
   const mode = params.get('mode');
 
-  if (configB64) {
-    try {
-      const configStr = atob(configB64);
-      document.getElementById('setupConfig').value = configStr;
-      localStorage.setItem('estimathon_config', configStr);
-    } catch(e) {}
-  }
   if (room) {
     document.getElementById('setupRoom').value = room;
   }
   if (mode && (mode === 'admin' || mode === 'player')) {
-    // Auto-connect if we have config
-    const cfg = document.getElementById('setupConfig').value.trim();
-    if (cfg) {
-      setTimeout(() => connectFirebase(mode), 100);
-    }
+    setTimeout(() => connectFirebase(mode), 100);
   }
 })();
 </script>
