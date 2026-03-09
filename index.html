@@ -61,6 +61,7 @@ body::before {
 
 /* ─── LAYOUT ─── */
 .app { position: relative; z-index: 1; }
+.hidden { display: none !important; }
 
 .header {
   text-align: center;
@@ -86,6 +87,118 @@ body::before {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 500;
+}
+
+.mode-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  margin-top: 0.5rem;
+}
+.mode-badge.admin { background: rgba(108, 92, 231, 0.12); color: var(--accent); }
+.mode-badge.player { background: var(--good-bg); color: var(--good); }
+
+/* ─── SETUP SCREEN ─── */
+.setup-screen {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.setup-screen h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.3rem;
+  background: linear-gradient(135deg, #2d2b55, #6c5ce7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.setup-screen .setup-sub {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.setup-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.setup-card label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.3rem;
+  margin-top: 0.8rem;
+}
+.setup-card label:first-child { margin-top: 0; }
+
+.setup-card input, .setup-card textarea {
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.7rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.setup-card input:focus, .setup-card textarea:focus { border-color: var(--accent); }
+
+.setup-card textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.setup-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.setup-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.setup-hint a { color: var(--accent); text-decoration: none; }
+.setup-hint a:hover { text-decoration: underline; }
+
+.setup-hint code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  background: var(--bg-input);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+
+.setup-error {
+  font-size: 0.75rem;
+  color: var(--bad);
+  margin-top: 0.5rem;
+  display: none;
 }
 
 /* ─── TIMER ─── */
@@ -160,6 +273,7 @@ body::before {
   letter-spacing: 0.1em;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 .btn-reveal:hover { box-shadow: 0 6px 30px rgba(108, 92, 231, 0.35); transform: translateY(-1px); }
 .btn-reveal::after {
@@ -203,6 +317,11 @@ body::before {
   color: #fff;
 }
 .tab:hover:not(.active) { background: var(--bg-card-hover); }
+
+/* single tab (player mode) */
+.tabs .tab:only-child {
+  border-radius: var(--radius);
+}
 
 /* ─── PANELS ─── */
 .panel { display: none; padding: 0 1rem 2rem; max-width: 1500px; margin: 0 auto; }
@@ -385,6 +504,9 @@ body::before {
   min-width: 900px;
 }
 
+/* Player mode: simpler scoreboard */
+.scoreboard.player-view { min-width: 400px; }
+
 .scoreboard thead th {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
@@ -408,7 +530,7 @@ body::before {
 }
 
 .scoreboard tbody tr {
-  border-bottom: 1px solid rgba(42, 42, 58, 0.5);
+  border-bottom: 1px solid rgba(221, 216, 232, 0.6);
   transition: background 0.2s;
 }
 .scoreboard tbody tr:hover { background: var(--bg-card-hover); }
@@ -575,9 +697,22 @@ body::before {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
   color: var(--text-muted);
-  border-bottom: 1px solid rgba(42, 42, 58, 0.3);
+  border-bottom: 1px solid rgba(221, 216, 232, 0.5);
 }
 .formula-bar span { color: var(--accent); }
+
+/* ─── CONNECTION STATUS ─── */
+.connection-bar {
+  text-align: center;
+  padding: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+.connection-bar.connected { background: var(--good-bg); color: var(--good); }
+.connection-bar.disconnected { background: var(--bad-bg); color: var(--bad); }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
@@ -613,18 +748,60 @@ input[type=number] { -moz-appearance: textfield; }
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- ════════════ SETUP SCREEN ════════════ -->
+<div class="setup-screen" id="setupScreen">
+  <h2>ESTIMATHON</h2>
+  <p class="setup-sub">Connect to Firebase for real-time sync</p>
+
+  <div class="setup-card">
+    <label>Firebase Config JSON</label>
+    <textarea id="setupConfig" placeholder='{
+  "apiKey": "...",
+  "authDomain": "...",
+  "databaseURL": "...",
+  "projectId": "...",
+  "storageBucket": "...",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+
+    <label>Room Name</label>
+    <input type="text" id="setupRoom" placeholder="e.g. estimathon-2026" value="">
+
+    <div class="setup-error" id="setupError"></div>
+
+    <div class="setup-actions">
+      <button class="btn btn-accent" style="flex:1" onclick="connectFirebase('admin')">Join as Admin</button>
+      <button class="btn" style="flex:1" onclick="connectFirebase('player')">Join as Player</button>
+    </div>
+  </div>
+
+  <p class="setup-hint">
+    Create a free Firebase project at
+    <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a><br>
+    Enable <strong>Realtime Database</strong> and set rules to <code>".read": true, ".write": true</code><br>
+    Copy the config object from Project Settings → General → Your apps → Firebase SDK snippet
+  </p>
+</div>
+
+<!-- ════════════ MAIN APP ════════════ -->
+<div class="app hidden" id="mainApp">
+
+  <!-- CONNECTION STATUS -->
+  <div class="connection-bar connected" id="connectionBar">Connected</div>
 
   <!-- HEADER -->
   <header class="header">
     <h1>ESTIMATHON</h1>
     <p class="subtitle">Scoring Dashboard</p>
+    <div class="mode-badge" id="modeBadge"></div>
   </header>
 
   <!-- TIMER -->
   <section class="timer-section">
     <div class="timer-display" id="timerDisplay">30:00</div>
-    <div class="timer-controls">
+    <div class="timer-controls" id="timerControls">
       <button class="btn btn-accent" id="btnStart" onclick="toggleTimer()">Start</button>
       <button class="btn btn-danger" id="btnReset" onclick="resetTimer()">Reset</button>
     </div>
@@ -636,9 +813,9 @@ input[type=number] { -moz-appearance: textfield; }
   </div>
 
   <!-- TABS -->
-  <div class="tabs mt-1">
+  <div class="tabs mt-1" id="tabsContainer">
     <button class="tab active" onclick="switchTab('scoreboard')">Scoreboard</button>
-    <button class="tab" onclick="switchTab('admin')">Admin</button>
+    <button class="tab" id="adminTab" onclick="switchTab('admin')">Admin</button>
   </div>
 
   <!-- SCOREBOARD PANEL -->
@@ -648,7 +825,7 @@ input[type=number] { -moz-appearance: textfield; }
     </div>
     <div class="scoreboard-wrapper">
       <table class="scoreboard" id="scoreboardTable">
-        <thead>
+        <thead id="scoreboardHead">
           <tr>
             <th>#</th>
             <th>Team</th>
@@ -680,71 +857,285 @@ input[type=number] { -moz-appearance: textfield; }
   <button class="btn reveal-close" id="revealCloseBtn" onclick="closeReveal()">Close</button>
 </div>
 
+<!-- ════════════ FIREBASE SDK ════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
-// ─── STATE ───
+// ─── CONSTANTS ───
 const NUM_PROBLEMS = 13;
 const NUM_TEAMS = 10;
 const TIMER_SECONDS = 30 * 60;
 
+// ─── APP STATE ───
+let MODE = 'admin'; // 'admin' or 'player'
+let db = null;      // Firebase database ref
+let roomRef = null; // Reference to our room
+let localTimerInterval = null; // local display ticker
+
 const state = {
-  answers: new Array(NUM_PROBLEMS).fill(null),   // correct answers (numbers)
+  answers: new Array(NUM_PROBLEMS).fill(null),
   teams: [],
-  timer: { seconds: TIMER_SECONDS, running: false, interval: null }
+  timer: { endTime: null, running: false, remainingSeconds: TIMER_SECONDS }
 };
 
-// Initialize teams
 for (let t = 0; t < NUM_TEAMS; t++) {
   state.teams.push({
     name: `Team ${t + 1}`,
-    intervals: new Array(NUM_PROBLEMS).fill(null)  // each: {min, max} or null
+    intervals: new Array(NUM_PROBLEMS).fill(null)
   });
 }
 
-// ─── TIMER ───
-function toggleTimer() {
-  if (state.timer.running) {
-    clearInterval(state.timer.interval);
-    state.timer.running = false;
-    document.getElementById('btnStart').textContent = 'Start';
-    updateTimerDisplay();
+// ─── SETUP & FIREBASE CONNECTION ───
+
+// Restore saved config
+try {
+  const saved = localStorage.getItem('estimathon_config');
+  if (saved) document.getElementById('setupConfig').value = saved;
+  const savedRoom = localStorage.getItem('estimathon_room');
+  if (savedRoom) document.getElementById('setupRoom').value = savedRoom;
+} catch(e) {}
+
+function connectFirebase(mode) {
+  const errEl = document.getElementById('setupError');
+  errEl.style.display = 'none';
+
+  const configStr = document.getElementById('setupConfig').value.trim();
+  const room = document.getElementById('setupRoom').value.trim() || 'default';
+
+  let config;
+  try {
+    config = JSON.parse(configStr);
+  } catch(e) {
+    errEl.textContent = 'Invalid JSON. Paste the Firebase config object.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if (!config.databaseURL) {
+    errEl.textContent = 'Config is missing "databaseURL". Check your Firebase config.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Save for next time
+  localStorage.setItem('estimathon_config', configStr);
+  localStorage.setItem('estimathon_room', room);
+
+  MODE = mode;
+
+  // Initialize Firebase
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
+    db = firebase.database();
+    roomRef = db.ref('rooms/' + room);
+  } catch(e) {
+    errEl.textContent = 'Firebase init failed: ' + e.message;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Show main app
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+
+  // Configure mode
+  const badge = document.getElementById('modeBadge');
+  if (MODE === 'player') {
+    badge.textContent = 'Player View';
+    badge.className = 'mode-badge player';
+    document.getElementById('adminTab').classList.add('hidden');
+    document.getElementById('timerControls').classList.add('hidden');
+    // Player scoreboard: hide intervals, show only rank/name/good/score
+    renderPlayerScoreboardHead();
   } else {
-    if (state.timer.seconds <= 0) return;
-    state.timer.running = true;
-    document.getElementById('btnStart').textContent = 'Pause';
-    state.timer.interval = setInterval(() => {
-      state.timer.seconds--;
-      if (state.timer.seconds <= 0) {
-        state.timer.seconds = 0;
-        clearInterval(state.timer.interval);
-        state.timer.running = false;
-        document.getElementById('btnStart').textContent = 'Start';
+    badge.textContent = 'Admin';
+    badge.className = 'mode-badge admin';
+  }
+
+  // Listen for connection status
+  db.ref('.info/connected').on('value', snap => {
+    const bar = document.getElementById('connectionBar');
+    if (snap.val() === true) {
+      bar.textContent = 'Connected';
+      bar.className = 'connection-bar connected';
+    } else {
+      bar.textContent = 'Disconnected — Reconnecting...';
+      bar.className = 'connection-bar disconnected';
+    }
+  });
+
+  // Subscribe to data
+  subscribeToFirebase();
+
+  // Render admin UI (only for admin mode)
+  if (MODE === 'admin') {
+    renderAnswersGrid();
+    renderTeamCards();
+  }
+
+  renderScoreboard();
+  startLocalTimerTick();
+}
+
+// ─── FIREBASE SUBSCRIPTIONS ───
+
+function subscribeToFirebase() {
+  // Listen: answers
+  roomRef.child('answers').on('value', snap => {
+    const data = snap.val();
+    for (let p = 0; p < NUM_PROBLEMS; p++) {
+      state.answers[p] = (data && data[p] !== undefined && data[p] !== null) ? data[p] : null;
+    }
+    if (MODE === 'admin') {
+      // Update answer inputs without re-rendering (avoid losing focus)
+      for (let p = 0; p < NUM_PROBLEMS; p++) {
+        const el = document.getElementById(`ans-${p}`);
+        if (el && el !== document.activeElement) {
+          el.value = state.answers[p] !== null ? state.answers[p] : '';
+        }
       }
-      updateTimerDisplay();
-    }, 1000);
-    updateTimerDisplay();
+      updateAllStatusDots();
+    }
+    renderScoreboard();
+  });
+
+  // Listen: teams
+  roomRef.child('teams').on('value', snap => {
+    const data = snap.val();
+    if (!data) return;
+    for (let t = 0; t < NUM_TEAMS; t++) {
+      if (data[t]) {
+        if (data[t].name) state.teams[t].name = data[t].name;
+        for (let p = 0; p < NUM_PROBLEMS; p++) {
+          if (data[t].intervals && data[t].intervals[p]) {
+            state.teams[t].intervals[p] = {
+              min: data[t].intervals[p].min ?? null,
+              max: data[t].intervals[p].max ?? null
+            };
+            // Clean up if both null
+            if (state.teams[t].intervals[p].min === null && state.teams[t].intervals[p].max === null) {
+              state.teams[t].intervals[p] = null;
+            }
+          } else {
+            state.teams[t].intervals[p] = null;
+          }
+        }
+      }
+    }
+    if (MODE === 'admin') {
+      // Update inputs without re-rendering
+      for (let t = 0; t < NUM_TEAMS; t++) {
+        const nameEl = document.querySelector(`#team-card-${t} .team-name-input`);
+        if (nameEl && nameEl !== document.activeElement) {
+          nameEl.value = state.teams[t].name;
+        }
+        for (let p = 0; p < NUM_PROBLEMS; p++) {
+          const minEl = document.getElementById(`int-${t}-${p}-min`);
+          const maxEl = document.getElementById(`int-${t}-${p}-max`);
+          const interval = state.teams[t].intervals[p];
+          if (minEl && minEl !== document.activeElement) {
+            minEl.value = interval && interval.min !== null ? interval.min : '';
+          }
+          if (maxEl && maxEl !== document.activeElement) {
+            maxEl.value = interval && interval.max !== null ? interval.max : '';
+          }
+        }
+      }
+      updateAllStatusDots();
+    }
+    renderScoreboard();
+  });
+
+  // Listen: timer
+  roomRef.child('timer').on('value', snap => {
+    const data = snap.val();
+    if (!data) return;
+    state.timer.running = !!data.running;
+    state.timer.endTime = data.endTime || null;
+    state.timer.remainingSeconds = data.remainingSeconds ?? TIMER_SECONDS;
+
+    if (MODE === 'admin') {
+      document.getElementById('btnStart').textContent = state.timer.running ? 'Pause' : 'Start';
+    }
+  });
+}
+
+// ─── FIREBASE WRITES ───
+
+function fbSetAnswer(probIdx, val) {
+  roomRef.child('answers/' + probIdx).set(val);
+}
+
+function fbSetInterval(teamIdx, probIdx, interval) {
+  if (interval) {
+    roomRef.child(`teams/${teamIdx}/intervals/${probIdx}`).set(interval);
+  } else {
+    roomRef.child(`teams/${teamIdx}/intervals/${probIdx}`).remove();
+  }
+}
+
+function fbSetTeamName(teamIdx, name) {
+  roomRef.child(`teams/${teamIdx}/name`).set(name);
+}
+
+function fbSetTimer(timerData) {
+  roomRef.child('timer').set(timerData);
+}
+
+// ─── TIMER (SYNCED) ───
+
+function getTimerSeconds() {
+  if (state.timer.running && state.timer.endTime) {
+    const now = Date.now();
+    const remaining = Math.max(0, Math.ceil((state.timer.endTime - now) / 1000));
+    return remaining;
+  }
+  return state.timer.remainingSeconds;
+}
+
+function startLocalTimerTick() {
+  if (localTimerInterval) clearInterval(localTimerInterval);
+  localTimerInterval = setInterval(updateTimerDisplay, 250);
+  updateTimerDisplay();
+}
+
+function toggleTimer() {
+  if (MODE !== 'admin') return;
+  const secs = getTimerSeconds();
+
+  if (state.timer.running) {
+    // Pause
+    fbSetTimer({ running: false, endTime: null, remainingSeconds: secs });
+  } else {
+    // Start
+    if (secs <= 0) return;
+    const endTime = Date.now() + secs * 1000;
+    fbSetTimer({ running: true, endTime: endTime, remainingSeconds: secs });
   }
 }
 
 function resetTimer() {
-  clearInterval(state.timer.interval);
-  state.timer.running = false;
-  state.timer.seconds = TIMER_SECONDS;
-  document.getElementById('btnStart').textContent = 'Start';
-  updateTimerDisplay();
+  if (MODE !== 'admin') return;
+  fbSetTimer({ running: false, endTime: null, remainingSeconds: TIMER_SECONDS });
 }
 
 function updateTimerDisplay() {
   const el = document.getElementById('timerDisplay');
-  const m = Math.floor(state.timer.seconds / 60);
-  const s = state.timer.seconds % 60;
+  if (!el) return;
+  const secs = getTimerSeconds();
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
   el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 
   el.classList.remove('running', 'warning', 'danger');
-  if (state.timer.seconds <= 0) {
+  if (secs <= 0) {
     el.classList.add('danger');
-  } else if (state.timer.seconds <= 300) {
+  } else if (secs <= 300) {
     el.classList.add('danger');
-  } else if (state.timer.seconds <= 600) {
+  } else if (secs <= 600) {
     el.classList.add('warning');
   } else if (state.timer.running) {
     el.classList.add('running');
@@ -770,7 +1161,7 @@ function calcTeamScore(teamIdx) {
   for (let p = 0; p < NUM_PROBLEMS; p++) {
     const interval = team.intervals[p];
     const answer = state.answers[p];
-    if (interval && answer !== null) {
+    if (interval && answer !== null && interval.min !== null && interval.max !== null) {
       const { min, max } = interval;
       if (min <= answer && answer <= max) {
         goodCount++;
@@ -786,11 +1177,11 @@ function calcTeamScore(teamIdx) {
 function isGood(teamIdx, probIdx) {
   const interval = state.teams[teamIdx].intervals[probIdx];
   const answer = state.answers[probIdx];
-  if (!interval || answer === null) return null; // unknown
+  if (!interval || answer === null || interval.min === null || interval.max === null) return null;
   return interval.min <= answer && answer <= interval.max;
 }
 
-// ─── RENDER: ANSWERS GRID ───
+// ─── RENDER: ANSWERS GRID (ADMIN ONLY) ───
 function renderAnswersGrid() {
   const grid = document.getElementById('answersGrid');
   grid.innerHTML = '';
@@ -801,19 +1192,21 @@ function renderAnswersGrid() {
       <label>P${p + 1}</label>
       <input type="number" step="any" placeholder="Answer" id="ans-${p}"
         value="${state.answers[p] !== null ? state.answers[p] : ''}"
-        oninput="updateAnswer(${p}, this.value)">
+        oninput="onAnswerInput(${p}, this.value)">
     `;
     grid.appendChild(cell);
   }
 }
 
-function updateAnswer(probIdx, val) {
-  state.answers[probIdx] = val === '' ? null : parseFloat(val);
+function onAnswerInput(probIdx, val) {
+  const num = val === '' ? null : parseFloat(val);
+  state.answers[probIdx] = num;
+  fbSetAnswer(probIdx, num);
   updateAllStatusDots();
   renderScoreboard();
 }
 
-// ─── RENDER: TEAM ADMIN CARDS ───
+// ─── RENDER: TEAM ADMIN CARDS (ADMIN ONLY) ───
 function renderTeamCards() {
   const container = document.getElementById('teamAdminCards');
   container.innerHTML = '';
@@ -830,12 +1223,12 @@ function renderTeamCards() {
         <div class="interval-cell">
           <span class="prob-label">P${p + 1}</span>
           <input type="number" step="any" placeholder="min" id="int-${t}-${p}-min"
-            value="${interval ? interval.min : ''}"
-            oninput="updateInterval(${t}, ${p}, 'min', this.value)">
+            value="${interval && interval.min !== null ? interval.min : ''}"
+            oninput="onIntervalInput(${t}, ${p}, 'min', this.value)">
           <span class="sep">–</span>
           <input type="number" step="any" placeholder="max" id="int-${t}-${p}-max"
-            value="${interval ? interval.max : ''}"
-            oninput="updateInterval(${t}, ${p}, 'max', this.value)">
+            value="${interval && interval.max !== null ? interval.max : ''}"
+            oninput="onIntervalInput(${t}, ${p}, 'max', this.value)">
           <div class="status-dot" id="dot-${t}-${p}"></div>
         </div>
       `;
@@ -846,7 +1239,7 @@ function renderTeamCards() {
         <span class="team-number">${t + 1}</span>
         <input class="team-name-input" value="${state.teams[t].name}"
           onclick="event.stopPropagation()"
-          oninput="updateTeamName(${t}, this.value)" placeholder="Team name">
+          oninput="onTeamNameInput(${t}, this.value)" placeholder="Team name">
         <span class="collapse-icon">▼</span>
       </div>
       <div class="team-intervals-grid">${intervalsHTML}</div>
@@ -861,11 +1254,13 @@ function toggleCard(t) {
   document.getElementById(`team-card-${t}`).classList.toggle('collapsed');
 }
 
-function updateTeamName(t, val) {
-  state.teams[t].name = val || `Team ${t + 1}`;
+function onTeamNameInput(t, val) {
+  const name = val || `Team ${t + 1}`;
+  state.teams[t].name = name;
+  fbSetTeamName(t, name);
 }
 
-function updateInterval(teamIdx, probIdx, field, val) {
+function onIntervalInput(teamIdx, probIdx, field, val) {
   const num = val === '' ? null : parseFloat(val);
   let interval = state.teams[teamIdx].intervals[probIdx];
 
@@ -876,9 +1271,11 @@ function updateInterval(teamIdx, probIdx, field, val) {
 
   interval[field] = num;
 
-  // If both are null, remove the interval
   if (interval.min === null && interval.max === null) {
     state.teams[teamIdx].intervals[probIdx] = null;
+    fbSetInterval(teamIdx, probIdx, null);
+  } else {
+    fbSetInterval(teamIdx, probIdx, interval);
   }
 
   updateStatusDot(teamIdx, probIdx);
@@ -910,10 +1307,22 @@ function updateAllStatusDots() {
 }
 
 // ─── RENDER: SCOREBOARD ───
+
+function renderPlayerScoreboardHead() {
+  const thead = document.getElementById('scoreboardHead');
+  document.getElementById('scoreboardTable').classList.add('player-view');
+  thead.innerHTML = `<tr>
+    <th>#</th>
+    <th>Team</th>
+    <th>Good</th>
+    <th>Score</th>
+  </tr>`;
+}
+
 function renderScoreboard() {
   const tbody = document.getElementById('scoreboardBody');
+  if (!tbody) return;
 
-  // Calculate scores and rank
   const ranked = state.teams.map((team, idx) => {
     const { goodCount, score } = calcTeamScore(idx);
     return { idx, name: team.name, goodCount, score };
@@ -921,7 +1330,6 @@ function renderScoreboard() {
 
   ranked.sort((a, b) => a.score - b.score);
 
-  // Assign ranks (handle ties)
   let currentRank = 1;
   for (let i = 0; i < ranked.length; i++) {
     if (i > 0 && ranked[i].score > ranked[i - 1].score) {
@@ -931,32 +1339,49 @@ function renderScoreboard() {
   }
 
   tbody.innerHTML = '';
-  for (const entry of ranked) {
-    const tr = document.createElement('tr');
-    if (entry.rank <= 3) tr.className = `rank-${entry.rank}`;
 
-    let probCells = '';
-    for (let p = 0; p < NUM_PROBLEMS; p++) {
-      const interval = state.teams[entry.idx].intervals[p];
-      const good = isGood(entry.idx, p);
-      let content = '<span style="color:var(--text-muted)">—</span>';
-
-      if (interval && interval.min !== null && interval.max !== null) {
-        const icon = good === true ? '✅' : good === false ? '❌' : '';
-        content = `<span class="interval-display">[${fmtNum(interval.min)}, ${fmtNum(interval.max)}]</span>
-                   <span class="result-icon">${icon}</span>`;
-      }
-      probCells += `<td class="prob-cell">${content}</td>`;
+  if (MODE === 'player') {
+    // Player view: rank, name, good count, score only
+    for (const entry of ranked) {
+      const tr = document.createElement('tr');
+      if (entry.rank <= 3) tr.className = `rank-${entry.rank}`;
+      tr.innerHTML = `
+        <td><span class="rank-badge">${entry.rank}</span></td>
+        <td class="team-name-cell">${escapeHTML(entry.name)}</td>
+        <td class="good-count">${entry.goodCount}/${NUM_PROBLEMS}</td>
+        <td class="score-cell">${fmtScore(entry.score)}</td>
+      `;
+      tbody.appendChild(tr);
     }
+  } else {
+    // Admin view: full detail with intervals
+    for (const entry of ranked) {
+      const tr = document.createElement('tr');
+      if (entry.rank <= 3) tr.className = `rank-${entry.rank}`;
 
-    tr.innerHTML = `
-      <td><span class="rank-badge">${entry.rank}</span></td>
-      <td class="team-name-cell">${escapeHTML(entry.name)}</td>
-      ${probCells}
-      <td class="good-count">${entry.goodCount}/${NUM_PROBLEMS}</td>
-      <td class="score-cell">${fmtScore(entry.score)}</td>
-    `;
-    tbody.appendChild(tr);
+      let probCells = '';
+      for (let p = 0; p < NUM_PROBLEMS; p++) {
+        const interval = state.teams[entry.idx].intervals[p];
+        const good = isGood(entry.idx, p);
+        let content = '<span style="color:var(--text-muted)">—</span>';
+
+        if (interval && interval.min !== null && interval.max !== null) {
+          const icon = good === true ? '✅' : good === false ? '❌' : '';
+          content = `<span class="interval-display">[${fmtNum(interval.min)}, ${fmtNum(interval.max)}]</span>
+                     <span class="result-icon">${icon}</span>`;
+        }
+        probCells += `<td class="prob-cell">${content}</td>`;
+      }
+
+      tr.innerHTML = `
+        <td><span class="rank-badge">${entry.rank}</span></td>
+        <td class="team-name-cell">${escapeHTML(entry.name)}</td>
+        ${probCells}
+        <td class="good-count">${entry.goodCount}/${NUM_PROBLEMS}</td>
+        <td class="score-cell">${fmtScore(entry.score)}</td>
+      `;
+      tbody.appendChild(tr);
+    }
   }
 }
 
@@ -978,14 +1403,11 @@ function revealScores() {
   }
 
   list.innerHTML = '';
-
-  // Reveal from last to first (reverse order for drama)
   const reversed = [...ranked].reverse();
 
   reversed.forEach((entry, i) => {
     const li = document.createElement('li');
     li.className = `reveal-item${entry.rank <= 3 ? ` rank-${entry.rank}` : ''}`;
-    li.style.animationDelay = `${0.3 + i * 0.25}s`;
     li.style.animation = `fadeUp 0.5s ${0.3 + i * 0.25}s forwards`;
     li.innerHTML = `
       <span class="reveal-rank">#${entry.rank}</span>
@@ -995,7 +1417,6 @@ function revealScores() {
     list.appendChild(li);
   });
 
-  // Show close button after all items
   const closeBtn = document.getElementById('revealCloseBtn');
   closeBtn.style.opacity = '0';
   closeBtn.style.animation = `fadeUp 0.4s ${0.3 + reversed.length * 0.25 + 0.3}s forwards`;
@@ -1025,11 +1446,32 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
-// ─── INIT ───
-renderAnswersGrid();
-renderTeamCards();
-renderScoreboard();
-updateTimerDisplay();
+// ─── URL PARAM AUTO-CONNECT ───
+// If URL has ?config=base64&room=name&mode=admin|player, auto-connect
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const configB64 = params.get('config');
+  const room = params.get('room');
+  const mode = params.get('mode');
+
+  if (configB64) {
+    try {
+      const configStr = atob(configB64);
+      document.getElementById('setupConfig').value = configStr;
+      localStorage.setItem('estimathon_config', configStr);
+    } catch(e) {}
+  }
+  if (room) {
+    document.getElementById('setupRoom').value = room;
+  }
+  if (mode && (mode === 'admin' || mode === 'player')) {
+    // Auto-connect if we have config
+    const cfg = document.getElementById('setupConfig').value.trim();
+    if (cfg) {
+      setTimeout(() => connectFirebase(mode), 100);
+    }
+  }
+})();
 </script>
 </body>
 </html>
